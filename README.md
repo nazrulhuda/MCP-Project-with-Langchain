@@ -24,11 +24,16 @@ The agent uses Groq via `langchain-groq` for chat completion.
 
 1) Download uv in windows:
 
-```powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
 ```
 
 in linux: 
-```curl -LsSf https://astral.sh/uv/install.sh | sh
+
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
 ```
 
 2) Create and activate a virtual environment
