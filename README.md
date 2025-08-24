@@ -40,6 +40,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ```
 uv venv
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .venv\Scripts\activate
 
 ```
