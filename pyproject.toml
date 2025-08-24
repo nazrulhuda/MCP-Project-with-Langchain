@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "flask>=3.1.2",
     "langchain-groq>=0.3.2",
     "langchain-mcp-adapters>=0.1.7",
     "langgraph>=0.4.8",
