@@ -1,95 +1,106 @@
-## MCP + LangChain + Groq Demo (Python)
+# MCP Chatbot with Flask Frontend
 
-This repo demonstrates how to build a LangChain agent that can call tools exposed via the Model Context Protocol (MCP). It connects to two MCP tool servers:
+This project combines the MCP (Model Context Protocol) tools with a beautiful Flask web interface to create an interactive AI chatbot.
 
-- Math server (`mathserver.py`) over `stdio`
-- Weather server (`weather.py`) over HTTP (`/mcp`)
+## Features
 
-The agent uses Groq via `langchain-groq` for chat completion.
+- **Math Operations**: Perform mathematical calculations using the math MCP server
+- **Weather Information**: Get weather data using the weather MCP server
+- **Modern UI**: Beautiful Bootstrap-based chat interface
+- **Real-time Chat**: Interactive chat experience with the AI agent
 
-### Repo layout
+## Prerequisites
 
-- `client.py`: LangGraph ReAct agent that loads tools from MCP servers and calls a Groq model via `ChatGroq`.
-- `mathserver.py`: MCP tool server exposing `add(a,b)` and `multiple(a,b)` over `stdio`.
-- `weather.py`: MCP tool server exposing `get_weather(location)` over HTTP.
-- `requirements.txt` / `pyproject.toml`: Python dependencies.
+1. **Python 3.8+** installed
+2. **Groq API Key** - You need to set up your Groq API key
 
-### Prerequisites
+## Setup
 
-- Python 3.13+ (per `pyproject.toml`)
-- A Groq API key
-- Windows PowerShell users may need to adjust execution policy to activate venv
+1. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### Setup
+2. **Set up environment variables**:
+   Create a `.env` file in the project root with:
+   ```
+   GROQ_API_KEY=your_groq_api_key_here
+   ```
 
-1) Download uv in windows:
+3. **Get your Groq API key**:
+   - Visit [Groq Console](https://console.groq.com/)
+   - Create an account and get your API key
+   - Add it to the `.env` file
+
+## Running the Chatbot
+
+### Option 1: Automatic Startup (Recommended)
+```bash
+python start_chatbot.py
+```
+This will:
+- Start the weather MCP server
+- Start the Flask application
+- Open your browser automatically
+
+### Option 2: Manual Startup
+1. **Start the weather server** (in one terminal):
+   ```bash
+   python weather.py
+   ```
+
+2. **Start the Flask app** (in another terminal):
+   ```bash
+   python app.py
+   ```
+
+3. **Open your browser** and go to: `http://localhost:5000`
+
+## Usage
+
+1. Open the chatbot in your browser
+2. Type your questions in the chat input
+3. The AI will respond using the available MCP tools
+
+### Example Questions:
+- **Math**: "What's (15 + 27) × 3?"
+- **Weather**: "What's the weather like in California?"
+- **General**: "Can you help me with calculations?"
+
+## Project Structure
 
 ```
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-
+├── app.py                 # Main Flask application
+├── weather.py            # Weather MCP server
+├── mathserver.py         # Math MCP server
+├── templates/
+│   └── index.html       # Chatbot HTML template
+├── static/
+│   └── style.css        # Chatbot styling
+├── start_chatbot.py     # Automatic startup script
+├── requirements.txt      # Python dependencies
+└── README_CHATBOT.md    # This file
 ```
 
-in linux: 
+## Troubleshooting
 
-```
-curl -LsSf https://astral.sh/uv/install.sh | sh
+1. **"Agent is still initializing"**: Wait a few seconds for the MCP tools to load
+2. **Weather server not responding**: Make sure `weather.py` is running on port 8000
+3. **Math operations not working**: Ensure `mathserver.py` can be executed
 
-```
+## Stopping the Application
 
-2) Create and activate a virtual environment
+- Press `Ctrl+C` in the terminal running the Flask app
+- The weather server will be automatically terminated
 
-```
-uv venv
-.venv\Scripts\activate
+## Customization
 
-```
+- **Add new MCP tools**: Modify `app.py` to include additional MCP servers
+- **Change the UI**: Edit `templates/index.html` and `static/style.css`
+- **Modify responses**: Update the agent configuration in `app.py`
 
-3) Install dependencies
+## Security Notes
 
-```
-uv add -r requirements.txt
-```
-
-4) Configure your Groq API key
-
-Option A: Create a `.env` file in the project root
-
-```
-GROQ_API_KEY=your_actual_groq_api_key
-```
-
-Option B: Set an environment variable (temporary, current session)
-
-```powershell
-$env:GROQ_API_KEY="your_actual_groq_api_key"
-```
-
-### Running the demo
-
-The client launches the math MCP server itself (via `stdio`). You must run the weather server in a separate terminal before starting the client.
-
-1) Start the weather MCP server (Terminal A)
-
-```
-python weather.py
-```
-
-This should start an HTTP server on `http://localhost:8000/mcp`.
-
-2) Start the Math MCP server (Terminal B):
-```
-python mathserver.py
-```
-
-3) Run the client (Terminal C)
-
-```
-python client.py
-```
-
-You should see the agent call the math tool first, then the weather tool, and print the final responses.
-
-
-
-
-
+- Keep your Groq API key secure and never commit it to version control
+- The Flask app runs in debug mode by default (change for production)
+- Consider adding authentication for production use
