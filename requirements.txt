@@ -4,3 +4,4 @@ mcp
 langgraph
 python-dotenv
 flask
+psutil
