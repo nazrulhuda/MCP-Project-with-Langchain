@@ -1,0 +1,26 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Install system dependencies for psutil
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy sys server
+COPY sysserver.py .
+
+# Expose port
+EXPOSE 8001
+
+# Set environment variables
+ENV SYS_MCP_PORT=8001
+ENV SYS_MCP_HOST=0.0.0.0
+
+# Run the sys server
+CMD ["python", "sysserver.py"]
+

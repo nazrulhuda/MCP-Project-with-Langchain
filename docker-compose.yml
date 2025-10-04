@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # Math MCP Server
+  mathserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.math
+    container_name: mcp-math-server
+    ports:
+      - "8002:8002"
+    environment:
+      - MATH_MCP_PORT=8002
+      - MATH_MCP_HOST=0.0.0.0
+    networks:
+      - mcp-network
+    restart: unless-stopped
+
+  # Weather MCP Server
+  weatherserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.weather
+    container_name: mcp-weather-server
+    ports:
+      - "8000:8000"
+    environment:
+      - WEATHER_MCP_PORT=8000
+      - WEATHER_MCP_HOST=0.0.0.0
+    networks:
+      - mcp-network
+    restart: unless-stopped
+
+  # System MCP Server
+  sysserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.sys
+    container_name: mcp-sys-server
+    ports:
+      - "8001:8001"
+    environment:
+      - SYS_MCP_PORT=8001
+      - SYS_MCP_HOST=0.0.0.0
+    networks:
+      - mcp-network
+    restart: unless-stopped
+
+  # Flask Backend Application
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: mcp-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_PORT=5001
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - SYS_MCP_URL=http://sysserver:8001/mcp
+      - WEATHER_MCP_URL=http://weatherserver:8000/mcp
+      - MATH_MCP_URL=http://mathserver:8002/mcp
+    depends_on:
+      - mathserver
+      - weatherserver
+      - sysserver
+    networks:
+      - mcp-network
+    restart: unless-stopped
+
+networks:
+  mcp-network:
+    driver: bridge
+
